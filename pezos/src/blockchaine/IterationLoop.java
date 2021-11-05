@@ -27,13 +27,12 @@ public class IterationLoop {
 		long timestampLastReceptionBroadcast = 0;
 		long secondsBeforeNextbroadcast = 0;
 		Block lastBroadcastedBlock = null;
-		Block previousBroadcastedBlock = null;
 		
 		
-		////// 4th message = tag 1
 		util.sendToSocket (util.to2BytesArray(1),out,"tag 1");
+		////// 4th message = tag 1
+		
 		while(true) {
-			
 			////// 5th message = block
 			byte[] lastBroadcastedBlockAsBytes = util.getFromSocket(174,in,"block"); // 174 bytes = 2 tag + 172 block
 			lastBroadcastedBlock = new Block(lastBroadcastedBlockAsBytes);
@@ -47,8 +46,7 @@ public class IterationLoop {
 			System.out.println("timestampLastReceivedBroadcast = "+util.toDateAsString(timestampLastReceptionBroadcast));
 			secondsBeforeNextbroadcast = 600 - (timestampLastReceptionBroadcast-lastBroadcastedBlock.getTimeStamp());
 			System.out.println("secondsBeforeNextbroadcast = "+secondsBeforeNextbroadcast);
-			//TimeUnit.SECONDS.sleep(secondsBeforeNextbroadcast+2);
-			TimeUnit.SECONDS.sleep(600);
+			TimeUnit.SECONDS.sleep(secondsBeforeNextbroadcast+2);
 		}
 	}
 }

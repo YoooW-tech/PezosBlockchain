@@ -187,8 +187,6 @@ public class Interaction {
 	//Vérifications
 	
 	public byte[] tag9Content(DataOutputStream out, int ErrorTag, byte[] correctedData) throws org.apache.commons.codec.DecoderException, IOException {
-			// A TESTER
-			//byte[] msg = util.to2BytesArray(9);
 			byte[] msg = util.to2BytesArray(ErrorTag);
 			msg = concatTwoArrays(msg, correctedData);
 			return msg;
@@ -196,13 +194,11 @@ public class Interaction {
 
 	//Version pour la signature
 	public byte[] tag9ContentSign(DataOutputStream out, int ErrorTag){
-		//byte[] msg = util.to2BytesArray(9);
 		byte [] msg = util.to2BytesArray(ErrorTag);
 		return msg;
 	}
 
 	public void tag9Call(byte[] content, String pk, String sk, DataOutputStream out) throws DataLengthException, org.apache.commons.codec.DecoderException, CryptoException, IOException{
-
 		byte[] pkBytes = util.toBytesArray(pk);
 
 		// Création de la signature
@@ -221,10 +217,9 @@ public class Interaction {
 
 
 	public void verifyErrors( Block block, DataOutputStream out, DataInputStream in, String pk, String sk) throws IOException, org.apache.commons.codec.DecoderException, InvalidKeyException, SignatureException, InvalidKeySpecException, NoSuchAlgorithmException, DataLengthException, CryptoException{
-		System.out.println("******************************* verifyErrors\n"+block.toString()+"\n**********************************");
 		byte[] operationContent = null;
 		Block predecessor = new Block(tag3call(block.getLevel()-1, out, in));
-		System.out.println("AFFICHAGE DU PREDECESSOR : -------"+predecessor);
+		
 		//Etat
 		byte [] currentState = tag7call(block.getLevel(),out, in);
 		State state = new State();
@@ -233,12 +228,10 @@ public class Interaction {
 		//TimeStamp
 		byte[] correctPredecessorTimestamp = state.getPredecessorTimestamp();
 		long differenceTimestampsInSeconds = util.toLong(block.getTimeStampBytes())-util.toLong(correctPredecessorTimestamp);
-		System.out.println("difference timestamp : "+differenceTimestampsInSeconds);
 		//Operations
 		ListOperations lop = new ListOperations();
 	    lop.extractAllOperations(tag5call(block.getLevel(),out, in));
 	    HachOfOperations hashOps = new HachOfOperations(lop.getListOperations());
-		System.out.println("******************************* hashOps = \n"+hashOps.toString());
 	    byte[] hashDesOperations = hashOps.ops_hash();
 		
 		//VerifPred
