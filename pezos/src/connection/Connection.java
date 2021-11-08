@@ -69,7 +69,7 @@ public class Connection {
 		    if (tag == 1) {
 		    	Block blockAsObjet = new Block(reponse);
 		    	System.out.println(blockAsObjet);
-				inter.verifyErrors(blockAsObjet, out, in, pkString, skString);
+				//inter.verifyErrors(blockAsObjet, out, in, pkString, skString);
 			}   else if (tag == 3) {
 				Block blockAsObjet = new Block(reponse);
 				System.out.println(blockAsObjet);

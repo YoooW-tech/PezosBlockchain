@@ -216,9 +216,10 @@ public class Interaction {
 	}
 
 
-	public void verifyErrors( Block block, DataOutputStream out, DataInputStream in, String pk, String sk) throws IOException, org.apache.commons.codec.DecoderException, InvalidKeyException, SignatureException, InvalidKeySpecException, NoSuchAlgorithmException, DataLengthException, CryptoException{
+	public void verifyErrors( Block block, DataOutputStream out, DataInputStream in,int tempsBlocs, String pk, String sk) throws IOException, org.apache.commons.codec.DecoderException, InvalidKeyException, SignatureException, InvalidKeySpecException, NoSuchAlgorithmException, DataLengthException, CryptoException{
 		byte[] operationContent = null;
 		Block predecessor = new Block(tag3call(block.getLevel()-1, out, in));
+		System.out.println("bloc pred : " + predecessor);
 		
 		//Etat
 		byte [] currentState = tag7call(block.getLevel(),out, in);
@@ -240,9 +241,9 @@ public class Interaction {
 			operationContent = tag9Content(out, 1, predecessor.getHashCurrentBlock());
 		}
 		//VerifTimeStamp
-		if(differenceTimestampsInSeconds != 600){
+		if(differenceTimestampsInSeconds != tempsBlocs){
 			System.out.println("======\n #Verification TimeStamp :# false \n======");
-			long correctedTimeStamp = util.toLong(correctPredecessorTimestamp) + 600;
+			long correctedTimeStamp = util.toLong(correctPredecessorTimestamp) + tempsBlocs;
 			operationContent = tag9Content(out, 2, util.to8BytesArray(correctedTimeStamp));
 			block.setTimeStamp(util.to8BytesArray(correctedTimeStamp));
 		}

@@ -7,6 +7,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.codec.DecoderException;
@@ -31,7 +32,10 @@ public class IterationLoop {
 		
 		util.sendToSocket (util.to2BytesArray(1),out,"tag 1");
 		////// 4th message = tag 1
-		
+		Scanner sc = new Scanner(System.in);
+		System.out.println("temps entre chaque bloc?");
+		int tempsEntreBlocs = sc.nextInt();
+
 		while(true) {
 			////// 5th message = block
 			byte[] lastBroadcastedBlockAsBytes = util.getFromSocket(174,in,"block"); // 174 bytes = 2 tag + 172 block
@@ -39,12 +43,12 @@ public class IterationLoop {
 			System.out.println("#lastBroadcastedBlock#\n"+lastBroadcastedBlock);
 
 			////// verify errors 
-			(new Interaction()).verifyErrors(lastBroadcastedBlock,out,in,pkString,skString);
+			(new Interaction()).verifyErrors(lastBroadcastedBlock,out,in,tempsEntreBlocs,pkString,skString);
 			
 			////// timing
 			timestampLastReceptionBroadcast = util.currentDateTimeAsSeconds();
 			System.out.println("timestampLastReceivedBroadcast = "+util.toDateAsString(timestampLastReceptionBroadcast));
-			secondsBeforeNextbroadcast = 600 - (timestampLastReceptionBroadcast-lastBroadcastedBlock.getTimeStamp());
+			secondsBeforeNextbroadcast = tempsEntreBlocs - (timestampLastReceptionBroadcast-lastBroadcastedBlock.getTimeStamp());
 			System.out.println("secondsBeforeNextbroadcast = "+secondsBeforeNextbroadcast);
 			TimeUnit.SECONDS.sleep(secondsBeforeNextbroadcast+2);
 		}
