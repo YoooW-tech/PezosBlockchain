@@ -1,2 +1,3 @@
 # PezosBlockchain
-Project about listening to a Blockchain and working on it
+Projet de Master 2 
+Ecoute d'une blockchain et envoi de correctifs sur les blocs afin de gagner du PEZ
